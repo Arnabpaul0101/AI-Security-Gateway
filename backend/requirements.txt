@@ -1,8 +1,8 @@
-fastapi 
-uvicorn 
-python-dotenv 
-pydantic 
-langchain 
-google-generativeai
+fastapi
+uvicorn
+python-dotenv
+pydantic
+langchain
+google-genai
 langchain[google-genai]
 python-multipart
