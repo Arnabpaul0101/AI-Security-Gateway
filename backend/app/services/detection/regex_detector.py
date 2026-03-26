@@ -9,9 +9,11 @@ def run_regex_detection(lines):
             match = re.search(pattern, line, re.IGNORECASE)
 
             if match:
+                value = match.group(1) if match.groups() else match.group(0)
+
                 findings.append({
                     "type": key,
-                    "value": match.group(1),
+                    "value": value,
                     "line": i + 1,
                     "risk": get_risk(key)
                 })
@@ -22,6 +24,6 @@ def run_regex_detection(lines):
 def get_risk(key):
     if key == "password":
         return "critical"
-    if key == "api_key":
+    if key in ["api_key", "token", "generic_token", "phone"]:
         return "high"
     return "low"

@@ -1,6 +1,21 @@
 from fastapi import FastAPI
 from app.api.routes import router
+from fastapi.middleware.cors import CORSMiddleware
+# from cors import CORSMiddleware
 
 app = FastAPI(title="AI Secure Data Intelligence Platform")
+
+origins = [
+    "http://localhost:5173",  # your frontend
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 app.include_router(router)

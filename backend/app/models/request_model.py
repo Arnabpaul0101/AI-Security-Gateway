@@ -3,5 +3,5 @@ from typing import Optional, Dict
 
 class AnalyzeRequest(BaseModel):
     input_type: str
-    content: str
+    content: Optional[str] = None
     options: Optional[Dict] = {}
