@@ -262,13 +262,3 @@ ERROR something broke
 This platform automates security analysis of logs and helps organizations quickly identify vulnerabilities, prevent data leaks, and improve system security.
 
 ---
-
-## 📽️ Demo
-
-(Add your demo video link here)
-
----
-
-## 🔗 Repository
-
-(Add your GitHub link here)
