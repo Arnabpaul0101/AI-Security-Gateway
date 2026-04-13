@@ -1,19 +1,30 @@
 import os
 import json
 import re
-from google import genai
 from dotenv import load_dotenv
-import asyncio
+
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+# from langchain_groq import ChatGroq
 
 load_dotenv()
 
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
-async def run_ai_analysis(content, findings):
-    prompt = f"""
+llm = ChatGoogleGenerativeAI(
+    model="gemini-2.5-flash",
+    google_api_key=os.getenv("GEMINI_API_KEY"),
+    temperature=0.2
+)
+
+# llm2 = ChatGroq(model="llama-3.3-70b-versatile", temperature=0.2)
+
+prompt_template = ChatPromptTemplate.from_template("""
 You are a cybersecurity log analysis system.
 
-Analyze the following logs and return STRICT JSON in this format:
+Analyze the logs and the detected findings.
+
+Return STRICT JSON in this format:
 
 {{
   "summary": "short 2-3 line summary",
@@ -23,23 +34,31 @@ Analyze the following logs and return STRICT JSON in this format:
 
 Rules:
 - Do NOT return markdown
-- Do NOT explain anything outside JSON
+- Do NOT add explanations outside JSON
 - Keep summary concise
-- Insights should be actionable
+- Insights must be actionable
+- Use findings to guide your analysis
 
 Logs:
 {content}
-"""
 
-    response = await asyncio.to_thread(
-        client.models.generate_content,
-        model="gemini-2.5-flash",
-        contents=prompt
-    )
+Findings:
+{findings}
+""")
 
-    text = response.text if hasattr(response, "text") else str(response)
 
-    parsed = extract_json(text)
+parser = StrOutputParser()
+
+
+async def run_ai_analysis(content, findings):
+    chain = prompt_template | llm | parser
+
+    response = await chain.ainvoke({
+        "content": content,
+        "findings": json.dumps(findings, indent=2)
+    })
+
+    parsed = extract_json(response)
 
     return {
         "summary": parsed.get("summary", ""),

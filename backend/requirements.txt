@@ -6,3 +6,4 @@ langchain
 google-genai
 langchain[google-genai]
 python-multipart
+langchain-groq
