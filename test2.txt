@@ -1,0 +1,9 @@
+{
+  "input_type": "log",
+  "content": "email=test@gmail.com\npassword=admin123\napi_key=sk-xyz\nERROR something broke",
+  "options": {
+    "mask": true,
+    "block_high_risk": true,
+    "log_analysis": true
+  }
+}
