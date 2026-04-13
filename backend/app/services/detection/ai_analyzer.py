@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from langchain_groq import ChatGroq
+# from langchain_groq import ChatGroq
 
 load_dotenv()
 
@@ -17,7 +17,7 @@ llm = ChatGoogleGenerativeAI(
     temperature=0.2
 )
 
-llm2 = ChatGroq(model="llama-3.3-70b-versatile", temperature=0.2)
+# llm2 = ChatGroq(model="llama-3.3-70b-versatile", temperature=0.2)
 
 prompt_template = ChatPromptTemplate.from_template("""
 You are a cybersecurity log analysis system.
