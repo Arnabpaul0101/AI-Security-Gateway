@@ -25,7 +25,7 @@ export default function useAnalysis() {
     if (mode === "file") formData.append("file", file);
 
     try {
-      const res = await axios.post("https://ai-security-gateway.onrender.com", formData);
+      const res = await axios.post("https://ai-security-gateway.onrender.com/analyze", formData);
       setResult(res.data);
       console.log(res.data);
     } catch {
