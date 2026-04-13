@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI(title="AI Secure Data Intelligence Platform")
 
 origins = [
-    "http://localhost:5173", 
+    "*", 
 ]
 
 app.add_middleware(
