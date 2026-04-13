@@ -29,7 +29,7 @@ function App() {
           <div className="max-w-3xl">
             <div className="mb-4 inline-flex items-center gap-2 rounded-lg border border-zinc-950/10 bg-white px-3 py-1.5 text-sm font-medium text-zinc-700 shadow-sm">
               <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              Live security analysis
+              Security analysis
             </div>
             <h1 className="max-w-4xl text-4xl font-semibold leading-tight tracking-normal text-zinc-950 sm:text-5xl">
               AI Secure Data Intelligence Platform
