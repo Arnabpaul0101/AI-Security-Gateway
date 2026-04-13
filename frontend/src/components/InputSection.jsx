@@ -1,3 +1,4 @@
+import { useRef, useState } from "react";
 import { motion as Motion } from "framer-motion";
 
 const inputModes = [
@@ -15,7 +16,61 @@ export default function InputSection({
   analyze,
   loading,
 }) {
+  const [isDraggingFile, setIsDraggingFile] = useState(false);
+  const dragDepth = useRef(0);
   const canAnalyze = mode === "text" ? input.trim().length > 0 : Boolean(file);
+  const selectedFileLabel = file
+    ? file.name
+    : isDraggingFile
+      ? "Drop the file to select it"
+      : "No file selected yet";
+
+  const handleFileSelect = (event) => {
+    const selectedFile = event.target.files?.[0];
+
+    if (selectedFile) {
+      setFile(selectedFile);
+    }
+  };
+
+  const handleDragEnter = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    dragDepth.current += 1;
+
+    if (event.dataTransfer.items?.length) {
+      setIsDraggingFile(true);
+    }
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    event.dataTransfer.dropEffect = "copy";
+  };
+
+  const handleDragLeave = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    dragDepth.current = Math.max(0, dragDepth.current - 1);
+
+    if (dragDepth.current === 0) {
+      setIsDraggingFile(false);
+    }
+  };
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    dragDepth.current = 0;
+    setIsDraggingFile(false);
+
+    const droppedFile = event.dataTransfer.files?.[0];
+
+    if (droppedFile) {
+      setFile(droppedFile);
+    }
+  };
 
   return (
     <div className="rounded-lg border border-zinc-950/10 bg-white p-4 shadow-sm sm:p-5">
@@ -87,14 +142,22 @@ export default function InputSection({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.25 }}
-            className="flex min-h-64 flex-col justify-between rounded-lg border border-dashed border-zinc-950/20 bg-[#fbfcf8] p-5"
+            onDragEnter={handleDragEnter}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            className={`flex min-h-64 flex-col justify-between rounded-lg border border-dashed p-5 transition ${
+              isDraggingFile
+                ? "border-emerald-500 bg-emerald-50 ring-4 ring-emerald-100"
+                : "border-zinc-950/20 bg-[#fbfcf8]"
+            }`}
           >
             <div>
               <p className="text-sm font-semibold text-zinc-900">
-                Upload a file for analysis
+                Drop a file here for analysis
               </p>
               <p className="mt-2 text-sm leading-6 text-zinc-600">
-                The selected file is sent through the existing backend endpoint.
+                Drag and drop a document, or use the file picker below.
               </p>
             </div>
 
@@ -102,13 +165,13 @@ export default function InputSection({
               <span className="sr-only">Choose file</span>
               <input
                 type="file"
-                onChange={(e) => setFile(e.target.files[0])}
+                onChange={handleFileSelect}
                 className="block w-full cursor-pointer rounded-lg border border-zinc-950/10 bg-white text-sm text-zinc-700 file:mr-4 file:cursor-pointer file:border-0 file:bg-zinc-900 file:px-4 file:py-3 file:text-sm file:font-semibold file:text-white hover:file:bg-zinc-700"
               />
             </label>
 
             <p className="mt-4 rounded-lg bg-[#eef7f1] px-3 py-2 text-sm font-medium text-zinc-700">
-              {file ? file.name : "No file selected yet"}
+              {selectedFileLabel}
             </p>
           </Motion.div>
         )}
