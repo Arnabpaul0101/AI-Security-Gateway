@@ -42,7 +42,7 @@ function LogViewer({ content, findings }) {
         </span>
       </div>
 
-      <div className="max-h-[32rem] min-w-full overflow-auto font-mono text-sm">
+      <div className="max-h-128 min-w-full overflow-auto font-mono text-sm">
         {lines.map((line, index) => {
           const lineNumber = index + 1;
           const risk = getLineRisk(lineNumber, findings);
